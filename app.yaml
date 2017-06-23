@@ -1,0 +1,5 @@
+runtime: go
+api_version: go1
+env: flex
+env_variables:
+  API_KEY: <api_key>
