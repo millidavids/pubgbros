@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>PUBG-Bros</title>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Rating</th>
+        <th>Best Rating</th>
+        <th>Rounds Played</th>
+        <th>Wins</th>
+        <th>Losses</th>
+        <th>Top 10s</th>
+        <th>Kills</th>
+        <th>Assists</th>
+        <th>K/D Ratio</th>
+        <th>Headshot Kills</th>
+        <th>Longest Kill</th>
+        <th>Revives</th>
+        <th>Damage Dealt</th>
+        <th>Knock Outs</th>
+      </tr>
+      {{range $key, $value := .}}
+        <tr>
+          <td>{{$value.Name}}</td>
+          <td>{{$value.Rating}}</td>
+          <td>{{$value.BestRating}}</td>
+          <td>{{$value.RoundsPlayed}}</td>
+          <td>{{$value.Wins}}</td>
+          <td>{{$value.Losses}}</td>
+          <td>{{$value.TopTens}}</td>
+          <td>{{$value.Kills}}</td>
+          <td>{{$value.Assists}}</td>
+          <td>{{$value.Kd}}</td>
+          <td>{{$value.HeadshotKills}}</td>
+          <td>{{$value.LongestKill}}</td>
+          <td>{{$value.Revives}}</td>
+          <td>{{$value.DamageDealt}}</td>
+          <td>{{$value.KnockOuts}}</td>
+        </tr>
+      {{end}}
+    </table>
+  </body>
+</html>
