@@ -71,18 +71,23 @@ func handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+  playerChannel := make(chan Player, len(accountNames))
   client := &http.Client{}
   var players = [len(accountNames)]Player{}
 
-  for index, accountName := range accountNames {
-    players[index] = generatePlayer(accountName, client)
+  for _, accountName := range accountNames {
+    go generatePlayer(accountName, client, playerChannel)
+  }
+
+  for index := range accountNames {
+    players[index] = <-playerChannel
   }
 
   template, _ := template.ParseFiles("table.html")
   template.Execute(w, players)
 }
 
-func generatePlayer(name string, client *http.Client) Player {
+func generatePlayer(name string, client *http.Client, playerChannel chan Player) {
   req, _ := http.NewRequest("GET", "https://pubgtracker.com/api/profile/pc/" + name, nil)
   req.Header.Add("TRN-API-KEY", os.Getenv("TRN_API_KEY"))
   resp, _ := client.Do(req)
@@ -133,5 +138,5 @@ func generatePlayer(name string, client *http.Client) Player {
     }
   }
 
-  return player
+  playerChannel <- player
 }
