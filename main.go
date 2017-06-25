@@ -61,6 +61,7 @@ type PUBGResponse struct {
 
 func main() {
   http.HandleFunc("/", handle)
+  http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 	log.Print("Listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
