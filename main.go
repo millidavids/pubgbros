@@ -1,14 +1,16 @@
 package main
 
 import (
-	//"fmt"
 	"log"
 	"net/http"
   "os"
   "io/ioutil"
   "encoding/json"
   "html/template"
+  "sort"
 )
+
+const REGION = "na"
 
 var accountNames = [...]string {
   "AussieZulu",
@@ -43,6 +45,12 @@ type Player struct {
   DamageDealt float64 // "Damage Dealt"
   KnockOuts int // "Knock Outs"
 }
+
+type ByName []Player
+
+func (a ByName) Len() int           { return len(a) }
+func (a ByName) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByName) Less(i, j int) bool { return a[i].Name < a[j].Name }
 
 type PUBGResponse struct {
   SelectedRegion string `json:"selectedRegion"`
@@ -84,6 +92,8 @@ func handle(w http.ResponseWriter, r *http.Request) {
     players[index] = <-playerChannel
   }
 
+  sort.Sort(ByName(players[:]))
+
   template, _ := template.ParseFiles("table.html")
   template.Execute(w, players)
 }
@@ -101,7 +111,7 @@ func generatePlayer(name string, client *http.Client, playerChannel chan Player)
   player := Player{Name: name}
 
   for _, outerstat := range jsonResponse.Stats {
-    if (outerstat.Region == jsonResponse.SelectedRegion && outerstat.Season == jsonResponse.DefaultSeason && outerstat.Match == "squad") {
+    if (outerstat.Region == REGION && outerstat.Season == jsonResponse.DefaultSeason && outerstat.Match == "squad") {
       for _, innerstat := range outerstat.Stats {
         switch innerstat.Label {
           case "Rating":
