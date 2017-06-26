@@ -26,6 +26,8 @@ var accountNames = [...]string {
   "Gregsaw",
   "Molpg",
   "Wolv3r1n3",
+  "Ketak",
+  "WillardJBradley",
 }
 
 type Player struct {
